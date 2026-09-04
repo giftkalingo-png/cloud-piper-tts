@@ -39,3 +39,14 @@ jobs:
           name: voiceover
           path: voiceover.wav
           retention-days: 1
+
+      - name: Create WAV Base64 file
+        run: |
+          base64 -w 0 voiceover.wav > voiceover.b64
+
+      - name: Upload Base64 voiceover
+        uses: actions/upload-artifact@v4
+        with:
+          name: voiceover-base64
+          path: voiceover.b64
+          retention-days: 1
