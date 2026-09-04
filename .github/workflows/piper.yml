@@ -8,6 +8,11 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   synthesize:
     runs-on: ubuntu-latest
@@ -33,20 +38,15 @@ jobs:
         run: |
           printf '%s' "$TEXT" | python -m piper -m en_US-lessac-medium --output_file voiceover.wav
 
-      - name: Upload voiceover
-        uses: actions/upload-artifact@v4
-        with:
-          name: voiceover
-          path: voiceover.wav
-          retention-days: 1
-
-      - name: Create WAV Base64 file
+      - name: Prepare website
         run: |
-          base64 -w 0 voiceover.wav > voiceover.b64
+          mkdir public
+          cp voiceover.wav public/voiceover.wav
 
-      - name: Upload Base64 voiceover
-        uses: actions/upload-artifact@v4
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: voiceover-base64
-          path: voiceover.b64
-          retention-days: 1
+          path: public
+
+      - name: Deploy website
+        uses: actions/deploy-pages@v4
