@@ -1,0 +1,41 @@
+name: Piper TTS
+
+on:
+  workflow_dispatch:
+    inputs:
+      text:
+        description: "Text to convert to speech"
+        required: true
+        type: string
+
+jobs:
+  synthesize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Piper
+        run: |
+          python -m pip install --upgrade pip
+          pip install "piper-tts"
+
+      - name: Download voice
+        run: |
+          python -m piper.download_voices en_US-lessac-medium
+
+      - name: Generate WAV
+        env:
+          TEXT: ${{ inputs.text }}
+        run: |
+          printf '%s' "$TEXT" | python -m piper -m en_US-lessac-medium --output_file voiceover.wav
+
+      - name: Upload voiceover
+        uses: actions/upload-artifact@v4
+        with:
+          name: voiceover
+          path: voiceover.wav
+          retention-days: 1
