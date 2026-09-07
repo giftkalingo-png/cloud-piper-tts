@@ -32,11 +32,11 @@ jobs:
         run: |
           python -m piper.download_voices en_US-lessac-medium
 
-      - name: Generate WAV
+          - name: Generate WAV
         env:
           TEXT: ${{ inputs.text }}
         run: |
-          printf '%s' "$TEXT" | python -m piper -m en_US-lessac-medium --output_file voiceover.wav
+          printf '%s' "$TEXT" | python -m piper -m en_US-ryan-high --length-scale 1.4 --output_file voiceover.wav
 
       - name: Prepare website
         run: |
