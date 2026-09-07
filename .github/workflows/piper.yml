@@ -24,12 +24,12 @@ jobs:
           pip install "piper-tts"
       - name: Download voice
         run: |
-          python -m piper.download_voices en_US-ryan-high
+          python -m piper.download_voices en_US-joe-medium
       - name: Generate WAV
         env:
           TEXT: ${{ inputs.text }}
         run: |
-          printf '%s' "$TEXT" | python -m piper -m en_US-ryan-high --length-scale 1.4 --output_file voiceover.wav
+          printf '%s' "$TEXT" | python -m piper -m en_US-joe-medium --length-scale 1.6 --output_file voiceover.wav
       - name: Prepare website
         run: |
           mkdir public
