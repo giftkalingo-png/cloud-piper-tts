@@ -29,7 +29,7 @@ jobs:
         env:
           TEXT: ${{ inputs.text }}
         run: |
-          printf '%s' "$TEXT" | python -m piper -m en_US-joe-medium --length-scale 1.5 --output_file voiceover.wav
+          printf '%s' "$TEXT" | python -m piper -m en_US-joe-medium --length-scale 1.4 --output_file voiceover.wav
       - name: Prepare website
         run: |
           mkdir public
