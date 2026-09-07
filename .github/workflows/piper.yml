@@ -1,5 +1,4 @@
 name: Piper TTS
-
 on:
   workflow_dispatch:
     inputs:
@@ -7,46 +6,37 @@ on:
         description: "Text to convert to speech"
         required: true
         type: string
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 jobs:
   synthesize:
     runs-on: ubuntu-latest
-
     steps:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
       - name: Install Piper
         run: |
           python -m pip install --upgrade pip
           pip install "piper-tts"
-
       - name: Download voice
         run: |
-          python -m piper.download_voices en_US-lessac-medium
-
-          - name: Generate WAV
+          python -m piper.download_voices en_US-ryan-high
+      - name: Generate WAV
         env:
           TEXT: ${{ inputs.text }}
         run: |
           printf '%s' "$TEXT" | python -m piper -m en_US-ryan-high --length-scale 1.4 --output_file voiceover.wav
-
       - name: Prepare website
         run: |
           mkdir public
           cp voiceover.wav public/voiceover.wav
-
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
-
       - name: Deploy website
         uses: actions/deploy-pages@v4
